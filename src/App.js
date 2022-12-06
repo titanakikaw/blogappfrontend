@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { Layout } from 'antd'
+import axios from 'axios'
+// import { Content } from 'antd/es/layout/layout'
+import React, { useContext, useEffect, useState } from 'react'
+import {Route, Routes } from 'react-router-dom'
+import Navbar from './components/navbar'
+import { UserContext } from './context/userContext'
+import SingleBlog from './pages/Blog/SingleBlog'
+import Home from './pages/Home'
+import Login from './pages/Login/Login'
+import Profile from './pages/Profile/Profile'
 
-function App() {
+const { Content } = Layout
+
+const App = () => {
+  const { user } = useContext(UserContext)
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        user ? <Authenticated/> : <Login/>
+      }
     </div>
-  );
+  )
 }
 
-export default App;
+
+const Authenticated = () => {
+  return(
+    <>
+      <Navbar/>
+      <Layout>
+        <Content
+          style={{
+            padding: '1rem',
+            height: '100vh'
+          }}
+        >
+          <Routes>
+            <Route path='' element={<Home/>}/>
+            <Route path='/Profile' element={<Profile/>}/>
+            <Route path='/Blogs/:id' element={<SingleBlog/>}/>
+            <Route path='*' element={<div>Page not found.</div>}/>
+          </Routes>
+        </Content>
+      </Layout>
+    </>
+  )
+}
+
+export default App
